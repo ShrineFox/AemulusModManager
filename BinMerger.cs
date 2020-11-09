@@ -9,6 +9,7 @@ namespace AemulusModManager
     class binMerge
     {
         private sprUtils sprUtil;
+        private ChecksumUtils checksum = new ChecksumUtils();
         private string exePath = @"Dependencies\PAKPack.exe";
 
         public binMerge()
@@ -252,8 +253,28 @@ namespace AemulusModManager
                         {
                             if (!Directory.Exists(Path.GetDirectoryName(binPath)))
                                 Directory.CreateDirectory(Path.GetDirectoryName(binPath));
-                            File.Copy(file, binPath, true);
-                            Console.WriteLine($"[INFO] Copying over {file} to {binPath}");
+
+                            if (File.Exists(binPath))
+                            {
+                                Console.WriteLine($"[INFO] {file} exists at output! Checking checksums...");
+                                string currentFileSum = checksum.GetChecksumString(file);
+                                string outputFileSum = checksum.GetChecksumString(binPath);
+
+                                if (currentFileSum.Equals(outputFileSum))
+                                {
+                                    Console.WriteLine("[INFO] Checksum match! Skipping copy to output.");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("[INFO] Checksum mismatch! Overwriting existing file!");
+                                    File.Copy(file, binPath, true);
+                                }
+                            }
+                            else
+                            {
+                                File.Copy(file, binPath, true);
+                                Console.WriteLine($"[INFO] Copying over {file} to {binPath}");
+                            }
                         }
                     }
                 }

@@ -121,6 +121,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ChecksumUtils.cs" />
     <Compile Include="CreatePackage.xaml.cs">
       <DependentUpon>CreatePackage.xaml</DependentUpon>
     </Compile>
